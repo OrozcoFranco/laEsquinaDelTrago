@@ -1,0 +1,10 @@
+para empezar el proyecto voy a utilizar el orm typeORM con postgres
+para instarlar la orm hay que colocar este comando: npm i @nestjs/typeorm typeorm pg
+
+luego hay que crear la carpeta de config para lograr la configuración de dicha orm
+
+ahora hay que ir a render para conectar la bs de postgres: https://dashboard.render.com/
+
+hay que instalar la dependencia para las variables de entorno: npm i @nestjs/config
+
+ir a app.modelu.ts, forRoot define de forma global y feature por modulos

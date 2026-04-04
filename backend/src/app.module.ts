@@ -5,18 +5,31 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typerorm.config';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { ProvidersModule } from './modules/providers/providers.module';
+import { ClientsModule } from './modules/clients/clients.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
+import { SalesModule } from './modules/sales/sales.module';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
     TypeOrmModule.forRootAsync({
       useFactory: typeOrmConfig,
       inject: [ConfigService],
     }),
-    AuthModule],
+    AuthModule,
+    ProductsModule,
+    CategoriesModule,
+    ProvidersModule,
+    ClientsModule,
+    PurchasesModule,
+    SalesModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

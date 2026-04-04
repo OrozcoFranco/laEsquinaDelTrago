@@ -8,3 +8,5 @@ ahora hay que ir a render para conectar la bs de postgres: https://dashboard.ren
 hay que instalar la dependencia para las variables de entorno: npm i @nestjs/config
 
 ir a app.modelu.ts, forRoot define de forma global y feature por modulos
+
+hay que crear la carpeta entities para modelar la bsd

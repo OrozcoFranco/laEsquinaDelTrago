@@ -1,10 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength} from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumber, IsString, MaxLength, Min } from 'class-validator';
 
 export class ProductsDto{
-
-    @IsNumber()
-    @IsNotEmpty({message: 'El id del producto es obligatorio'})
-    id_product: number;
 
     @IsString()
     @IsNotEmpty({message: 'El nombre es obligatorio'})
@@ -16,17 +12,19 @@ export class ProductsDto{
     @MaxLength(20)
     brand: string;
 
-    @IsString()
-    @IsNotEmpty({message: 'El tipo es obligatorio'})
-    @MaxLength(20)
-    type: string;
+    @IsInt()
+    @Min(0, {message: 'La cantidad debe ser mayor o igual a 0'})
+    @IsNotEmpty({message: 'La categoria es obligatoria'})
+    id_category: number;
 
     @IsNumber()
-    @IsNotEmpty({message: 'Precio de compra es obligatorio'})
-    price_purchase: number;
+    @Min(0, {message: 'Numero debe ser mayor o igual a 0'})
+    @IsNotEmpty({message: 'Stock actual obligatorio'})
+    stock_current: number;
 
     @IsNumber()
-    @IsNotEmpty({message: 'Precio de venta es obligatorio'})
-    price_sale: number;
+    @Min(0, {message: 'El numero debe ser mayor o igual a 0'})
+    @IsNotEmpty({message: 'Stock minimo obligatorio'})
+    stock_minimum: number;
 
 }

@@ -3,12 +3,14 @@ import { ClientDto } from './dto/clients.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/clients.entity';
 import { Repository } from 'typeorm';
+import { Product } from '../products/entities/products.entity';
 
 @Injectable()
 export class ClientsService {
 
     constructor(
-        @InjectRepository(Client) private readonly clientsRepository: Repository<Client>
+        @InjectRepository(Client) private readonly clientsRepository: Repository<Client>,
+        @InjectRepository(Product) private readonly productsRepository: Repository<Product>
     ){}
 
     create(clientDto: ClientDto) {

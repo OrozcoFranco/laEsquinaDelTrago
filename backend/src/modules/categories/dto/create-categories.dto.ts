@@ -1,8 +1,8 @@
 import { IsString, IsNotEmpty, MaxLength } from 'class-validator';
 
-export class CategoriesDto{
+export class CreateCategoryDto {
     @IsString()
     @IsNotEmpty({message: 'El nombre es obligatorio'})
-    @MaxLength(20)
-    name: string;
+    @MaxLength(60)
+    name!: string;
 }

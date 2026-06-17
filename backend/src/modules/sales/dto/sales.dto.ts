@@ -1,34 +1,35 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsInt, IsNotEmpty, IsNumber, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { PaymentMethod } from '../entities/sales.entity';
 
-
-export class SalesDto{
+export class CreateSaleDetailDto {
     @IsInt()
-    @IsNotEmpty()
-    id_client: number;
+    @IsNotEmpty({ message: 'El producto es obligatorio' })
+    id_product!: number;
 
-    @IsNumber()
-    @Min(0)
-    total: number;
+    @IsInt()
+    @IsNotEmpty({ message: 'La cantidad es obligatoria' })
+    @Min(1, { message: 'La cantidad debe ser mayor a 0' })
+    quantity!: number;
+}
+
+export class CreateSaleDto {
+    @IsInt()
+    @IsNotEmpty({ message: 'El cliente es obligatorio' })
+    id_client!: number;
+
+    @IsEnum(PaymentMethod, {
+        message: 'El método de pago debe ser: cash, transfer o check',
+    })
+    @IsNotEmpty({ message: 'El método de pago es obligatorio' })
+    paymentMethod!: PaymentMethod;
 
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => SalesDetailsDto)
-    details: SalesDetailsDto[];
+    @Type(() => CreateSaleDetailDto)
+    details!: CreateSaleDetailDto[];
 
-
-}
-
-export class SalesDetailsDto {
-    @IsInt()
-    @IsNotEmpty()
-    id_product: number;
-
-    @IsInt()
-    @Min(1)
-    amount: number;
-
-    @IsNumber()
-    @Min(0)
-    price_sale: number;
+    @IsString()
+    @IsOptional()
+    notes?: string; 
 }

@@ -1,19 +1,45 @@
-import { CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Providers } from "src/modules/providers/entities/providers.entity";
-import { PurchasesDetails } from './purchases.details';
-@Entity()
-export class Purchases{
-    @PrimaryGeneratedColumn({ name: 'id_purchase' })
-    id_purchase: number;
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Provider } from '../../providers/entities/providers.entity';
+import { User } from '../../users/entities/user.entity';
+import { PurchaseDetail } from './purchases-details.entity';
 
-    @CreateDateColumn({ name: 'date', type: 'timestamp' })
-    date: Date;
+export enum PurchaseStatus {
+    PENDING = 'pending',
+    COMPLETED = 'completed',
+    CANCELLED = 'cancelled',
+}
 
-    @ManyToOne(() => Providers, (provider) => provider.purchases)
+@Entity('purchases')
+export class Purchase {
+    @PrimaryGeneratedColumn()
+    id_purchase!: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    totalAmount!: number;
+
+    @Column({
+        type: 'enum',
+        enum: PurchaseStatus,
+        default: PurchaseStatus.COMPLETED,
+    })
+    status!: PurchaseStatus;
+
+    @Column({ type: 'text', nullable: true })
+    notes?: string;
+
+    @ManyToOne(() => Provider, (provider) => provider.purchases)
     @JoinColumn({ name: 'id_provider' })
-    providers: Providers;
+    provider!: Provider;
 
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'id_user' })
+    registeredBy!: User; // Quién registró la compra
 
-    @OneToMany(() => PurchasesDetails, (detail) => detail.purchase)
-    details: PurchasesDetails[];
+    @OneToMany(() => PurchaseDetail, (detail) => detail.purchase, {
+        cascade: true,
+    })
+    details!: PurchaseDetail[];
+
+    @CreateDateColumn()
+    createdAt!: Date;
 }

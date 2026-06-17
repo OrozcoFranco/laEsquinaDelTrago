@@ -1,31 +1,39 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { Products } from 'src/modules/products/entities/products.entity';
-import { Sales } from 'src/modules/sales/entities/sales.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm'
+import { Sale } from '../../sales/entities/sales.entity';
+import { Product } from '../../products/entities/products.entity';
 
 
 @Entity()
-export class Client{
+export class Client {
 
     @PrimaryGeneratedColumn({ name: 'id_client' })
-    id_client: number;
+    id_client!: number;
 
-    @Column( { type: 'varchar', length: 20} )
-    name: string;
+    @Column({ type: 'varchar', length: 20 })
+    name!: string;
 
-    @Column({type: 'varchar', length: 20})
-    phone: number;
+    @Column({ type: 'varchar', length: 20 })
+    phone!: string;
 
-    @Column( { type: 'varchar', length: 20})
-    adress: string;
+    @Column({ type: 'varchar', length: 30 })
+    adress!: string;
 
-    @Column(  { type: 'varchar', length: 20})
-    type_client: string;
+    @Column({ type: 'varchar', length: 30 })
+    type_client!: string;
 
-    @OneToMany( () => Products, products => products.id_product )
-    products: Products[];
+    @Column({ default: true })
+    isActive!: boolean;
 
-    @OneToMany( () => Sales, sales => sales.id_client )
-    sales: Sales[];
+
+    @ManyToOne(() => Client, (client) => client.sales)
+    @JoinColumn({ name: 'client_id' })
+    client!: Client;
+
+    @OneToMany(() => Product, products => products.id_product)
+    products!: Product[];
+
+    @OneToMany(() => Sale, sales => sales.id_client)
+    sales!: Sale[];
 
 
 }

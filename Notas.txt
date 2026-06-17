@@ -10,3 +10,7 @@ hay que instalar la dependencia para las variables de entorno: npm i @nestjs/con
 ir a app.modelu.ts, forRoot define de forma global y feature por modulos
 
 hay que crear la carpeta entities para modelar la bsd
+
+tenemos que descargar las siguientes dependencias para que nos funcione todo el modulo de auth:
+	npm install @nestjs/jwt @nestjs/passport passport passport-jwt bcrypt
+	npm install -D @types/passport-jwt @types/bcrypt

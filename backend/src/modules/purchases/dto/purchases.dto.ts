@@ -1,31 +1,33 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsInt, IsNotEmpty, IsNumber, IsString, Matches, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 
-export class PurchasesDto{
-    
+export class CreatePurchaseDetailDto {
     @IsInt()
-    @IsNotEmpty()
-    id_provider: number;
+    @IsNotEmpty({ message: 'El producto es obligatorio' })
+    id_product!: number;
+
+    @IsInt()
+    @IsNotEmpty({ message: 'La cantidad es obligatoria' })
+    @Min(1, { message: 'La cantidad debe ser mayor a 0' })
+    quantity!: number;
+
+    @IsNumber({ maxDecimalPlaces: 2 }, { message: 'Precio no válido' })
+    @IsNotEmpty({ message: 'El precio de compra es obligatorio' })
+    @Min(0)
+    purchasePrice!: number;
+}
+
+export class CreatePurchaseDto {
+    @IsInt()
+    @IsNotEmpty({ message: 'El proveedor es obligatorio' })
+    id_provider!: number;
 
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => PurchasesDetailsDto)
-    details: PurchasesDetailsDto[];
+    @Type(() => CreatePurchaseDetailDto)
+    details!: CreatePurchaseDetailDto[];
 
-}
-
-export class PurchasesDetailsDto{
-    @IsInt()
-    @IsNotEmpty()
-    id_product: number;
-
-    @IsInt()//cambiar a Isnumber tambien y sacar el maxdecimalplaces
-    @IsNotEmpty()
-    @Min(1)
-    amount: number;
-
-    @IsNumber({maxDecimalPlaces: 2}, {message: 'Cantidad no válida'})
-    @IsNotEmpty()
-    price_purchase: number;
-
+    @IsString()
+    @IsOptional()
+    notes?: string;
 }

@@ -1,24 +1,55 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Client } from "src/modules/clients/entities/clients.entity";
-import { SalesDetails } from "./salesDatails.entity";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Client } from '../../clients/entities/clients.entity';
+import { User } from '../../users/entities/user.entity';
+import { SaleDetail } from './sales-details.entity';
 
+export enum SaleStatus {
+    COMPLETED = 'completed',
+    CANCELLED = 'cancelled',
+}
 
-@Entity()
-export class Sales{
-    @PrimaryGeneratedColumn({ name: 'id_purchase' })
-    id_sale: number;
+export enum PaymentMethod {
+    CASH = 'cash',
+    TRANSFER = 'transfer',
+    CHECK = 'check',
+}
 
-    @CreateDateColumn({ name : 'date'})
-    date: Date;
+@Entity('sales')
+export class Sale {
+    @PrimaryGeneratedColumn()
+    id_sale!: number;
 
-    @Column({ name: 'total', type: 'decimal', precision: 10, scale: 2})
-    total: number;
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    totalAmount!: number;
 
-    @ManyToMany(()=> Client)
-    @JoinColumn({ name: 'id_client' })    
-    id_client: number;
+    @Column({
+        type: 'enum',
+        enum: SaleStatus,
+        default: SaleStatus.COMPLETED,
+    })
+    status!: SaleStatus;
 
-    @OneToMany( () => SalesDetails, (detail) => detail.sale, {cascade: true})
-    details: SalesDetails[];
+    @Column({
+        type: 'enum',
+        enum: PaymentMethod,
+        default: PaymentMethod.CASH,
+    })
+    paymentMethod!: PaymentMethod;
 
+    @Column({ type: 'text', nullable: true })
+    notes?: string;
+
+    @ManyToOne(() => Client, (client) => client.sales)
+    @JoinColumn({ name: 'id_client' })
+    id_client!: Client;
+
+    @ManyToOne(() => User)
+    @JoinColumn({ name: 'id_user' })
+    registeredBy!: User;
+
+    @OneToMany(() => SaleDetail, (detail) => detail.sale, { cascade: true })
+    details!: SaleDetail[];
+
+    @CreateDateColumn()
+    createdAt!: Date;
 }

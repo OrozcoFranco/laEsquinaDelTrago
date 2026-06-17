@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
-import { ProviderDto } from './dto/providers.dto';
+import { CreateProviderDto } from './dto/create-providers.dto';
 
 @Controller('providers')
 export class ProvidersController {
@@ -9,7 +9,7 @@ export class ProvidersController {
     ) {}
 
     @Post('new')
-    create(@Body() providerDto: ProviderDto){
+    create(@Body() providerDto: CreateProviderDto){
         return this.providersService.create(providerDto);
     }
 

@@ -21,6 +21,10 @@ export class AuthService {
         if (existingUser) {
             throw new ConflictException('El correo electrónico ya está registrado');
         }
+        const existingUserByDni = await this.userRepository.findOne({ where: { dni } });
+        if (existingUserByDni) {
+            throw new ConflictException('El Dni ya está registrado');
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -43,6 +47,7 @@ export class AuthService {
             user: {
                 id: user.id,
                 name: user.name,
+                dni: user.dni,
                 email: user.email,
                 role: user.role,
             },
@@ -77,6 +82,7 @@ export class AuthService {
             user: {
                 id: user.id,
                 name: user.name,
+                dni: user.dni,
                 email: user.email,
                 role: user.role,
             },

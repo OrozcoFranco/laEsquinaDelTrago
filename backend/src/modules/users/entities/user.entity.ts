@@ -10,7 +10,7 @@ export class User {
     name!: string;
 
     @Column({ unique: true })
-    dni!: number;
+    dni!: string;
 
     @Column({ unique: true })
     email!: string;

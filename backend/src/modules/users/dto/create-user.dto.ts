@@ -7,9 +7,9 @@ export class CreateUserDto {
     @MaxLength(20)
     name!: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty({ message: 'El DNI es obligatorio' })
-    dni!: number;
+    dni!: string;
 
     @IsEmail()
     @IsNotEmpty({ message: 'El correo electrónico es obligatorio' })

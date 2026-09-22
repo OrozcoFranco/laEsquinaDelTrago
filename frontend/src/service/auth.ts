@@ -1,21 +1,13 @@
-import axios from "axios";
-
-const api = import.meta.env.VITE_API_URL;
+import api from '../api/axios';
+import type { LoginForm, RegisterForm } from '../types';
 
 // funcion para registrarse
-export async function register(name: string, dni: string, email: string, password: string) {
-    const { data } = await axios.post(`${api}/auth/register`, {
-        name,
-        dni,
-        email,
-        password,
-    });
+export async function register(formData: Omit<RegisterForm, 'password_confirmation'>) {
+    const { data } = await api.post('/auth/register', formData);
     return data;
 }
 
-// para registrar el login
-export async function login(email: string, password: string) {
-    const { data } = await axios.post(`${api}/auth/login`, { email, password });
-    localStorage.setItem("token", data.accessToken);
+export async function login(formData: LoginForm) {
+    const { data } = await api.post('/auth/login', formData);
     return data;
 }

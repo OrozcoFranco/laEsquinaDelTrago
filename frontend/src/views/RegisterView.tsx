@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useForm } from 'react-hook-form'
 import { isAxiosError } from "axios";
 import { toast } from "sonner"
 import type { RegisterForm } from '../types'
 import ErrorMessage from "../components/ErrorMessage";
-import api from "../api/axios";
-
+import { register as registerUser } from "../service/auth"
 
 
 export default function RegisterView() {
+
+    const navigate = useNavigate();
+
     const initialValues: RegisterForm = {
         name: '',
         email: '',
@@ -24,13 +26,16 @@ export default function RegisterView() {
 
     const handleRegister = async (formData: RegisterForm) => {
         try {
-            const { data } = await api.post(`/auth/register`, formData)
+
+            const { password_confirmation, ...dataToSend } = formData;
+
+            const { data } = await registerUser(dataToSend);
             toast.success(data)
             reset()
-            console.log(data);
+            navigate('/auth/login');
         } catch (error) {
             if (isAxiosError(error) && error.response) {
-                toast.error(error.response.data.error);
+                toast.error(error.response.data.message);
             }
         }
     }
@@ -138,7 +143,7 @@ export default function RegisterView() {
             </form>
             <nav className=" mt-10">
                 <Link
-                    className=" text-center text-white text-lg block"
+                    className=" text-center text-black text-lg block"
                     to="/auth/login">
                     Registrado! Inicia sesion
                 </Link>

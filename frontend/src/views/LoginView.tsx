@@ -1,12 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import api from "../api/axios";
 import ErrorMessage from "../components/ErrorMessage";
 import { isAxiosError } from "axios";
 import type { LoginForm } from "../types";
+import { login as loginUser } from "../service/auth"
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginView() {
+
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
     const initialVAlues: LoginForm = {
         email: "",
         password: "",
@@ -16,11 +21,13 @@ export default function LoginView() {
 
     const handleLogin = async (formData: LoginForm) => {
         try {
-            const { data } = await api.post(`/auth/login`, formData);
-            localStorage.setItem("AUTH_TOKEN", data);
+            await login (formData);
+            toast.success('Bienvenido');
+            navigate("/")
+
         } catch (error) {
             if (isAxiosError(error) && error.response) {
-                toast.error(error.response.data.error);
+                toast.error(error.response.data.message);
             }
         }
     };
@@ -80,7 +87,7 @@ export default function LoginView() {
 
         <nav className=" mt-10">
             <Link
-            className=" text-center text-white text-lg block"
+            className=" text-center text-black text-lg block"
             to="/auth/register"
             >
             ¿No tienes cuenta? Crea una aquí
